@@ -1,4 +1,4 @@
-const getIssueType = require("./jiraService").getIssueType;
+const { getIssueType, getFields } = require("./jiraService");
 const express = require("express");
 const app = express();
 const cors = require("cors");
@@ -8,12 +8,18 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-app.get("/api", async (req, res) => {
+app.get("/api/issuetypes", async (req, res) => {
   try {
-    data = await getIssueType();
-    res.json({ dataMessage: data });
+    console.log("Calling getIssueType...");
+    const data = await getIssueType();
+    console.log("getIssueType returned:", data);
+    res.json({ status: "success", data: data });
   } catch (error) {
-    res.json({ errorMessage: error });
+    console.error("Error in /api route:", error);
+    res.json({
+      status: "failure",
+      errorMessage: error.message || "Unknown error",
+    });
   }
 });
 
