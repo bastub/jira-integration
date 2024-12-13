@@ -1,5 +1,5 @@
-const getIssueType = require("./jiraService");
+const { getProjects } = require("./jiraService");
 test("Test", async () => {
-  const data = await getIssueType();
+  const data = await getProjects();
   expect(data).toBe("test");
 });
