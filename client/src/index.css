@@ -46,3 +46,7 @@ button {
 button:hover {
   background-color: #535bf2;
 }
+
+textarea {
+  font-family: inherit;
+}

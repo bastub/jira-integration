@@ -53,6 +53,11 @@ select {
   outline: none;
 }
 
+input[type="text"],
+textarea {
+  width: calc(100% - 1em);
+}
+
 input[type="text"]:focus,
 textarea:focus,
 select:focus {
@@ -70,6 +75,7 @@ select {
 
 button {
   width: 100%;
+  border: 1px solid #535bf2;
 }
 
 .form-element {

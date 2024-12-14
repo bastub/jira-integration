@@ -9,10 +9,10 @@ function App() {
   const [projects, setProjects] = useState([]);
   const [selectedProject, setSelectedProject] = useState(null);
   const [summary, setSummary] = useState("");
+  const [description, setDescription] = useState("");
 
   // Fetch data when the component mounts
   useEffect(() => {
-    // Fetch issue types
     const fetchIssueTypes = async () => {
       try {
         const response = await getIssueType();
@@ -22,7 +22,6 @@ function App() {
       }
     };
 
-    // Fetch projects
     const fetchProjects = async () => {
       try {
         const response = await getProjects();
@@ -44,6 +43,21 @@ function App() {
         project: { id: selectedProject.id },
         issuetype: { id: selectedIssueType.id },
         summary: summary,
+        description: {
+          content: [
+            {
+              content: [
+                {
+                  text: description,
+                  type: "text",
+                },
+              ],
+              type: "paragraph",
+            },
+          ],
+          type: "doc",
+          version: 1,
+        },
       },
     });
   }
@@ -70,6 +84,7 @@ function App() {
       <div className="card">
         <form onSubmit={handleSubmit}>
           <div className="select-div">
+            {/* Project Selection */}
             <div className="form-element">
               <div className="label-img-div">
                 <img
@@ -77,7 +92,7 @@ function App() {
                   src={
                     selectedProject ? selectedProject.avatarUrls["48x48"] : ""
                   }
-                  alt={selectedProject ? selectedProject.name : "Project"}
+                  alt={selectedProject ? selectedProject.name : ""}
                 />
                 <label htmlFor="project">
                   {selectedProject ? selectedProject.name : "Project"}
@@ -85,7 +100,6 @@ function App() {
               </div>
               <select id="project" onChange={handleProjectSelectionChange}>
                 <option value="">-- Select a Project --</option>
-                {/* Create an option for every project */}
                 {projects.map((project) => (
                   <option key={project.id} value={project.id}>
                     {project.name}
@@ -93,6 +107,8 @@ function App() {
                 ))}
               </select>
             </div>
+
+            {/* Issue Type Selection */}
             <div className="form-element">
               <div className="label-img-div">
                 <img
@@ -103,29 +119,53 @@ function App() {
                   }
                 />
                 <label htmlFor="issueType">
-                  {selectedIssueType ? selectedIssueType.name : "Issue Type"}
+                  {selectedIssueType ? selectedIssueType.name : ""}
                 </label>
               </div>
-              <select id="issueType" onChange={handleTypeSelectionChange}>
+              <select
+                id="issueType"
+                onChange={handleTypeSelectionChange}
+                disabled={!selectedProject} // Disable when no project is selected
+              >
                 <option value="">-- Select an Issue Type --</option>
-                {/* Create an option for every isse type */}
-                {issueTypes.map((issueType) => (
-                  <option key={issueType.id} value={issueType.id}>
-                    {issueType.name}
-                  </option>
-                ))}
+                {selectedProject &&
+                  issueTypes
+                    .filter(
+                      (issueType) =>
+                        issueType.scope &&
+                        issueType.scope.project &&
+                        issueType.scope.project.id === selectedProject.id
+                    )
+                    .map((issueType) => (
+                      <option key={issueType.id} value={issueType.id}>
+                        {issueType.name}
+                      </option>
+                    ))}
               </select>
             </div>
           </div>
 
+          {/* Summary Input */}
           <div className="form-element">
             <label htmlFor="summary">Summary</label>
             <input
               type="text"
               id="summary"
+              value={summary}
               onChange={(e) => setSummary(e.target.value)}
             />
           </div>
+
+          {/* Description Input */}
+          <div className="form-element">
+            <label htmlFor="description">Description</label>
+            <textarea
+              id="description"
+              onChange={(e) => setDescription(e.target.value)}
+            ></textarea>
+          </div>
+
+          {/* Submit Button */}
           <button type="submit">Create</button>
         </form>
       </div>

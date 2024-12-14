@@ -40,7 +40,6 @@ app.get("/api/projects", async (req, res) => {
 // create a new issue on the Jira account
 app.post("/api/issue", async (req, res) => {
   try {
-    console.log("TEST:", req.body);
     const data = await setIssue(req.body);
     res.json({ data: data });
   } catch (error) {
