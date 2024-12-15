@@ -2,25 +2,6 @@ const encode = require("base-64").encode;
 const dotenv = require("dotenv");
 dotenv.config();
 
-// Get all issue types from the Jira account
-async function getIssueType() {
-  try {
-    var URL = process.env.baseURL + "/issuetype";
-    const response = await fetch(URL, {
-      method: "get",
-      headers: new Headers({
-        Authorization:
-          "Basic " + encode(process.env.mail + ":" + process.env.token),
-      }),
-    });
-    const gets = await response.json();
-    return gets;
-  } catch (error) {
-    console.error("Error in getIssueType:", error.message);
-    throw error;
-  }
-}
-
 // Get all projects from the Jira account
 async function getProjects() {
   try {
@@ -62,4 +43,54 @@ async function setIssue(req) {
   }
 }
 
-module.exports = { getIssueType, getProjects, setIssue };
+// get Issue types from a project
+async function getIssueTypeFromProject(projectId) {
+  try {
+    var URL =
+      process.env.baseURL + "/issue/createmeta/" + projectId + "/issuetypes";
+    const response = await fetch(URL, {
+      method: "get",
+      headers: new Headers({
+        Authorization:
+          "Basic " + encode(process.env.mail + ":" + process.env.token),
+      }),
+    });
+    const gets = await response.json();
+
+    return gets;
+  } catch (error) {
+    console.error("Error in getIssueTypeFromProject:", error.message);
+    throw error;
+  }
+}
+
+// get Issue type details
+async function getIssueTypeDetail(projectId, issueTypeId) {
+  try {
+    var URL =
+      process.env.baseURL +
+      "/issue/createmeta/" +
+      projectId +
+      "/issuetypes/" +
+      issueTypeId;
+    const response = await fetch(URL, {
+      method: "get",
+      headers: new Headers({
+        Authorization:
+          "Basic " + encode(process.env.mail + ":" + process.env.token),
+      }),
+    });
+    const gets = await response.json();
+    return gets;
+  } catch (error) {
+    console.error("Error in getIssueTypeDetail:", error.message);
+    throw error;
+  }
+}
+
+module.exports = {
+  getProjects,
+  setIssue,
+  getIssueTypeFromProject,
+  getIssueTypeDetail,
+};

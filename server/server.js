@@ -1,4 +1,9 @@
-const { getIssueType, getProjects, setIssue } = require("./jiraService");
+const {
+  getProjects,
+  setIssue,
+  getIssueTypeFromProject,
+  getIssueTypeDetail,
+} = require("./jiraService");
 const express = require("express");
 const app = express();
 const cors = require("cors");
@@ -8,22 +13,6 @@ const corsOptions = {
 
 app.use(express.json());
 app.use(cors(corsOptions));
-
-// get issue types available on the Jira account
-app.get("/api/issuetypes", async (req, res) => {
-  try {
-    const data = await getIssueType();
-    res
-      .status(200)
-      .json({ success: true, message: "Data fetched successfully", data });
-  } catch (error) {
-    console.error("Error fetching issue types:", error);
-    res.status(500).json({
-      success: false,
-      message: error.message || "An unknown error occurred",
-    });
-  }
-});
 
 // get projects available on the Jira account
 app.get("/api/projects", async (req, res) => {
@@ -41,6 +30,33 @@ app.get("/api/projects", async (req, res) => {
 app.post("/api/issue", async (req, res) => {
   try {
     const data = await setIssue(req.body);
+    res.json({ data: data });
+  } catch (error) {
+    res.json({
+      errorMessage: error.message || "Unknown error",
+    });
+  }
+});
+
+// get issue types from a project
+app.get("/api/issuetypes/:projectId", async (req, res) => {
+  try {
+    const data = await getIssueTypeFromProject(req.params.projectId);
+    res.json({ data: data });
+  } catch (error) {
+    res.json({
+      errorMessage: error.message || "Unknown error",
+    });
+  }
+});
+
+// get issue type details
+app.get("/api/issuetypesdetail/:projectId/:issueTypeId", async (req, res) => {
+  try {
+    const data = await getIssueTypeDetail(
+      req.params.projectId,
+      req.params.issueTypeId
+    );
     res.json({ data: data });
   } catch (error) {
     res.json({

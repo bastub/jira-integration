@@ -1,12 +1,5 @@
 import axios from "axios";
 
-// get issue types available on the Jira account
-const getIssueType = async () => {
-  var URL = import.meta.env.VITE_baseURL + "/issuetypes";
-  const response = await axios.get(URL);
-  return response.data;
-};
-
 // get projects available on the Jira account
 const getProjects = async () => {
   var URL = import.meta.env.VITE_baseURL + "/projects";
@@ -23,4 +16,23 @@ const setIssue = async (req) => {
   return response.data;
 };
 
-export { getIssueType, getProjects, setIssue };
+// get issue types from a project
+const getIssueTypeFromProject = async (projectId) => {
+  var URL = import.meta.env.VITE_baseURL + "/issuetypes/" + projectId;
+  const response = await axios.get(URL);
+  return response.data;
+};
+
+// get issue type details
+const getIssueTypeDetail = async (projectId, issueTypeId) => {
+  var URL =
+    import.meta.env.VITE_baseURL +
+    "/issuetypesdetail/" +
+    projectId +
+    "/" +
+    issueTypeId;
+  const response = await axios.get(URL);
+  return response.data;
+};
+
+export { getProjects, setIssue, getIssueTypeFromProject, getIssueTypeDetail };
