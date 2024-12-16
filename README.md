@@ -26,5 +26,6 @@ There are two .env files to create, one in the client folder and one in the serv
 - [x] Create a Jira issue through a React application
 - [x] Dynamically get the project key
 - [x] Dynamically get the issue type
+- [ ] Handle Dynamic auth
 - [ ] Handle issuetype hierarchy
 - [ ] Handle all fields
