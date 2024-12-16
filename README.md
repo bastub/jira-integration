@@ -17,6 +17,10 @@ npm install
 npm run dev
 ```
 
+## Environment variables
+
+There are two .env files to create, one in the client folder and one in the server folder. You can follow the .env.example files.
+
 ## TODO
 
 - [x] Create a Jira issue through a React application
